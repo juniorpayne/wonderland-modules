@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="imager-server">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/imager/build/server/imager-server.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

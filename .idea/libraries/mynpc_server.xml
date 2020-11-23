@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="mynpc-server">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/mynpc/build/server/mynpc-server.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

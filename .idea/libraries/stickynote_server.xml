@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="stickynote-server">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/wonderland-iSocial-stickynote-module/build/server/stickynote-server.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="voicebridge-jars">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/voicebridge-jars/stun.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/voicebridge-jars/bridge.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/voicebridge-jars/voicelib.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/voicebridge-jars/voip.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/voicebridge-jars/bridge_connector.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

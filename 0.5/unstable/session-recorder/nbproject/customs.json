@@ -1,0 +1,20 @@
+{
+    "attributes": {
+        "min": {
+            "context": "input"
+        },
+        "data-dismiss": {
+            "context": "button"
+        },
+        "role": {
+            "context": "div"
+        },
+        "data-toggle": {
+            "context": "a"
+        },
+        "data-action": {
+            "context": "button"
+        }
+    },
+    "elements": {}
+}

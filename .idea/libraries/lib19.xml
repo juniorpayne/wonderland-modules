@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lib19">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/timeline-providers/lib/flickrapi-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/timeline-providers/lib/json.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PatchFiles">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/Group-Tools/PatchFiles.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

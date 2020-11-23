@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lib17">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/xmpp-presence/lib/smackx.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/xmpp-presence/lib/smack.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

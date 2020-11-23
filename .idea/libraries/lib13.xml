@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lib13">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandArtUpload/lib/commons-io-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandArtUpload/lib/commons-fileupload-1.2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

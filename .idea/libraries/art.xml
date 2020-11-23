@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="art">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/client-test/art/PlymouthPA.zip!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/client-test/art/Ingrid.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

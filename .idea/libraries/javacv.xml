@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="javacv">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/javacv-integration/lib/zip/win32/javacv.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

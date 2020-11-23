@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib12">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/flapper/lib/trident.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/flapper/lib/propertytable.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/flapper/lib/jmetree_jme2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

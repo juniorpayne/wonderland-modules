@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="seagullmodule">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/seagull-module/dist/seagullmodule.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

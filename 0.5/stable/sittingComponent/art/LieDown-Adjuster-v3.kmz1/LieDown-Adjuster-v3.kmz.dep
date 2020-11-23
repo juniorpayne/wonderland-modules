@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<deployed-model>
+    <version>1</version>
+    <modelURL>wla://Sittable/LieDown-Adjuster-v3.kmz/models/untitled.dae.gz</modelURL>
+    <loaderDataURL>wla://Sittable/LieDown-Adjuster-v3.kmz/LieDown-Adjuster-v3.kmz.ldr</loaderDataURL>
+    <modelBGScale>
+        <x>0.01</x>
+        <y>0.01</y>
+        <z>0.01</z>
+    </modelBGScale>
+    <modelBGTranslation>
+        <x>-0.119999945</x>
+        <y>-0.9527103</y>
+        <z>0.12</z>
+    </modelBGTranslation>
+    <modelBGRotation>
+        <x>1.0</x>
+        <y>0.0</y>
+        <z>0.0</z>
+        <angle>0.0</angle>
+    </modelBGRotation>
+    <modelBounds>
+        <boundsType>BOX</boundsType>
+        <center_x>0.119999945</center_x>
+        <center_y>0.9527103</center_y>
+        <center_z>-0.12</center_z>
+        <dimension_x>0.95271045</dimension_x>
+        <dimension_y>0.120000005</dimension_y>
+        <dimension_z>0.12</dimension_z>
+    </modelBounds>
+    <modelLoaderClassname>org.jdesktop.wonderland.modules.jmecolladaloader.client.JmeColladaLoader</modelLoaderClassname>
+</deployed-model>

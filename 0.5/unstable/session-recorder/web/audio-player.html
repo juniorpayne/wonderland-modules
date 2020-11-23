@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Audio Player</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+        <!-- for audio player -->
+        <link rel="stylesheet" href="styles/style.css" />
+        <link rel="stylesheet" href="styles/ribbon.css" />
+        <link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="styles/bootstrap.min.css" type="text/css"/>
+
+        <script src="scripts/date.js" type="text/javascript"></script>
+        <script type="text/javascript" src="scripts/jquery.min.js"></script>
+        <script type="text/javascript" src="scripts/wavesurfer.min.js"></script>
+        <script type="text/javascript" src="scripts/wavesurfer.regions.js"></script>
+        <script type="text/javascript" src="scripts/wavesurfer.timeline.js"></script>
+        <script type="text/javascript" src="scripts/trivia.js"></script>
+        <script type="text/javascript" src="scripts/wavesurfer.minimap.js"></script>
+        <script type="text/javascript" src="scripts/audioPlayer.js"></script>
+
+        <script type="text/javascript">
+
+            var currRecording;
+            var colors = ["rgba(238, 130, 238, 1)", "rgba(206,90,87, 1)", "rgba(120,165,163, 1)", "rgba(225,177,106, 1)", "rgba(68,76,92, 1)"];
+            var colorsMedAlpha = ["rgba(238, 130, 238, 0.5)", "rgba(206,90,87, 0.5)", "rgba(120,165,163, 0.5)", "rgba(225,177,106, 0.5)", "rgba(68,76,92, 0.5)"];
+            var colorsLowAlpha = ["rgba(238, 130, 238, 0.15)", "rgba(206,90,87, 0.15)", "rgba(120,165,163, 0.15)", "rgba(225,177,106, 0.15)", "rgba(68,76,92, 0.15)"];
+            var currRegion;
+            var currPos = 0;
+            var resetCurrPos = true;
+            var inputEl;
+            var participantsArray;
+            var waveformHeight = 115;
+            var waveformsHeight = [];
+            var totalwaveformsHeight = 0;
+            var gestureStickersHeight = 20;
+            var soundStickerHeight = 20;
+
+            window.onload = function () {
+                var url = document.location.href,
+                        params = url.split('?')[1].split('&'),
+                        data = {}, tmp;
+                for (var i = 0, l = params.length; i < l; i++) {
+                    tmp = params[i].split('=');
+                    data[tmp[0]] = tmp[1];
+                }
+
+                $.getJSON('resources/sessionRecordings/get/' + data.id).success(function (recording) {
+                    currRecording = recording;
+                    inputEl = document.getElementById("header-text");
+                    $('#header-text').val(recording.recordingName);
+                    $('#header-text').data('val', $('#header-text').val());
+                    if (recording.onlyAudio.toString() === "true")
+                    {
+                        $('#video-label').hide();
+                        $('#video-url').hide();
+                        $('#embed-video').hide();
+                    }
+                    else
+                    {
+                        if (recording.videoURL !== null && recording.videoURL !== "")
+                        {
+                            $('#video-url').attr("href", recording.videoURL)
+                            $('#video-url').text(inputEl.value);
+                            if (recording.videoURL.toString().toLowerCase().indexOf("vimeo") >= 0)
+                            {
+                                var start = recording.videoURL.lastIndexOf("/");
+                                $('#embed-video').attr("src", "https://player.vimeo.com/video/" + recording.videoURL.substring(start + 1) + "?color=c1cf97&byline=0&portrait=0");
+                            }
+                            else
+                            {
+                                $('#embed-video').hide();
+                            }
+                        }
+                        else
+                        {
+                            $('#video-label').hide();
+                            $('#video-url').hide();
+                            $('#embed-video').hide();
+                        }
+                    }
+                    $('#tags').empty();
+                    $('#tags').append(recording.tagsCS);
+                    if (recording.transcribed === "true") {
+                        $('#transcribed').prop('checked', true);
+                    } else {
+                        $('#transcribed').prop('checked', false);
+                    }
+                    if (recording.participants instanceof Array) {
+                        participantsArray = recording.participants;
+                    } else {
+                        participantsArray = [recording.participants];
+                    }
+
+                    var audioURLs = [];
+                    for (var index in participantsArray) {
+                        var wavIndex = recording.audioURL.indexOf(".wav");
+                        var urlWithoutWav = recording.audioURL.substring(0, wavIndex);
+                        var participantAudioURL = urlWithoutWav + "-" + participantsArray[index] + ".wav";
+                        audioURLs.push(participantAudioURL);
+                    }
+                    initPlayer(audioURLs);
+
+                    inputEl.onkeyup = adjustWidthOfInput;
+                    adjustWidthOfInput();
+                });
+
+            };
+
+            /**
+             * mute a waveform
+             * @param {string} muteDiv div instance
+             * * @param {string} username username of the waveform
+             * @returns {undefined}
+             */
+            function muteWaveform(muteDiv, username) {
+                if (muteDiv.getAttribute('name') === "mute") {
+                    muteDiv.setAttribute('name', "unmute");
+                    var index = participantsArray.indexOf(username);
+                    fileIndexNotToPlay.splice(fileIndexNotToPlay.indexOf(index), 1);
+                    console.log("setting unmute icon...");
+                    $("#" + username + "-sound-off-img").hide();
+                    $("#" + username + "-sound-on-img").show();
+                } else {
+                    muteDiv.setAttribute('name', "mute");
+                    var index = participantsArray.indexOf(username);
+                    fileIndexNotToPlay.push(index);
+                    console.log("setting mute icon...");
+                    $("#" + username + "-sound-on-img").hide();
+                    $("#" + username + "-sound-off-img").show();
+                }
+            }
+
+            /**
+             * Put user name in front of each waveforms
+             */
+            function showUsernameAtWaveforms() {
+                var heightInc = 0;
+                for (var index in participantsArray) {
+                    //get width of div
+                    var tmp = document.createElement("span");
+                    tmp.className = "input-element tmp-element";
+                    tmp.innerHTML = participantsArray[index].replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                    document.body.appendChild(tmp);
+                    var theWidth = tmp.getBoundingClientRect().width + 5;
+                    var theHeight = tmp.getBoundingClientRect().height;
+                    document.body.removeChild(tmp);
+
+                    //set top-left-width
+                    var left = $("#waveform").position().left - theWidth - 3;
+                    var top = $("#waveform").position().top + 115 / 2 - theHeight / 2 + heightInc;
+
+                    //add divs to container
+                    $("#main").append('<div id="' + participantsArray[index] + '-user-div" ' +
+                            'style="position: absolute;cursor: hand; left:' + left + 'px; top:' + top + 'px; width:' + theWidth + 'px;' +
+                            ' height:' + (theHeight) + 'px;background: #337ab7;color: white;border-radius: 5px;text-align: center">' + participantsArray[index] + '</div>');
+                    $("#main").append('<div id="' + participantsArray[index] + '-mute-div" name="unmute" onClick="muteWaveform(this,\'' + participantsArray[index] + '\');" ' +
+                            'style="position: absolute;cursor: pointer; left:' + (left + (theWidth / 2) - 12) + 'px; top:' + (top + theHeight + 2) + 'px;">' +
+                            '<img id="' + participantsArray[index] + '-sound-on-img" src="sound-on.png" /><img id="' + participantsArray[index] + '-sound-off-img" style="display:none" src="sound-off.png" /></div>');
+                    heightInc = heightInc + waveformsHeight[index];
+                }
+                $(window).bind('resize', function () {
+                    for (var index in participantsArray) {
+                        var div = $("#" + participantsArray[index] + "-user-div");
+                        var left = $("#waveform").position().left - parseInt(div.css("width").replace(/[^-\d\.]/g, '')) - 3;
+                        div.css("left", left + "px");
+                    }
+                });
+            }
+
+            function updateWaveHeight() {
+                //update height + scroll height
+                wavesurfer.drawer.updateHeight(totalwaveformsHeight + 20);
+            }
+
+            /**
+             * get all saved transcription data and form it in region syntax 
+             * @returns {myObject}
+             */
+            function getTranscribedData() {
+                if (currRecording.transcribedData === null || currRecording.transcribedData === undefined)
+                    return eval('([])');
+
+                var date = new Date(Date.parse(currRecording.startTime));
+                var jsonString = '[';
+
+                //check if there is single obj then it will not be an array
+                var transcribedDataArray = [];
+                if (currRecording.transcribedData instanceof Array) {
+                    transcribedDataArray = currRecording.transcribedData;
+                } else {
+                    transcribedDataArray = [currRecording.transcribedData];
+                }
+
+                for (i = 0; i < transcribedDataArray.length; i++) {
+                    var transcription = transcribedDataArray[i];
+                    var absoluteStartTime = new Date(Date.parse(transcription.startTime));
+                    var relativeStartTime = (absoluteStartTime.getTime() - date.getTime()) / 1000;
+                    var absoluteEndTime = new Date(Date.parse(transcription.endTime));
+                    var relativeEndTime = (absoluteEndTime.getTime() - date.getTime()) / 1000;
+                    jsonString = jsonString + "{ \"id\":\"" + transcription.transcriptionId + "\", \"start\":\"" + relativeStartTime + "\", \"end\":\"" + (relativeEndTime) + "\", \"top\":\"" + (transcription.top) + "\", \"data\":{\"note\":\"" + transcription.transcriptionNote + "\"}},";
+                }
+                jsonString = jsonString.substr(0, jsonString.length - 1);
+                jsonString = jsonString + ']';
+                var myObject = eval('(' + jsonString + ')');
+                return myObject;
+            }
+
+            /**
+             * calculate waveform height for each users and total height
+             */
+            function calculateWaveformHeights() {
+                if ((currRecording.gestureData === undefined)) {
+                    totalwaveformsHeight = waveformHeight * participantsArray.length;
+                    for (p = 0; p < participantsArray.length; p++) {
+                        waveformsHeight[p] = waveformHeight;
+                    }
+                    return;
+                }
+                if (currRecording.gestureData !== null && currRecording.gestureData !== undefined) {
+                    //check if there is single obj then it will not be an array
+                    var gestureDataArray = [];
+                    if (currRecording.gestureData instanceof Array) {
+                        gestureDataArray = currRecording.gestureData;
+                    } else {
+                        gestureDataArray = [currRecording.gestureData];
+                    }
+
+                    for (p = 0; p < participantsArray.length; p++) {
+                        var hasGesture = false;
+                        var hasSitLie = false;
+                        var hasYesNoWink = false;
+
+                        for (g = 0; g < gestureDataArray.length; g++) {
+                            var gestureData = gestureDataArray[g];
+                            if (gestureData.username === participantsArray[p]) {
+                                hasGesture = true;
+                                if (gestureData.gesture === "Sit" ||
+                                        gestureData.gesture === "LieDown") {
+                                    hasSitLie = true;
+                                }
+
+                                if (gestureData.gesture === "Yes" ||
+                                        gestureData.gesture === "No" ||
+                                        gestureData.gesture === "Wink" ||
+                                        gestureData.gesture.indexOf("Look At") > -1) {
+                                    hasYesNoWink = true;
+                                }
+                            }
+                        }
+
+                        console.log(p + " : " + waveformHeight);
+                        waveformsHeight[p] = waveformHeight + parseInt((hasGesture === true) ? gestureStickersHeight : 0)
+                                + parseInt((hasSitLie === true) ? gestureStickersHeight : 0)
+                                + parseInt((hasYesNoWink === true) ? gestureStickersHeight : 0);
+                        console.log(p + " : " + waveformsHeight[p]);
+                    }
+
+                }
+                for (var h = 0; h < waveformsHeight.length; h++) {
+                    totalwaveformsHeight = totalwaveformsHeight + waveformsHeight[h];
+                }
+                console.log("participantsArray.length : " + participantsArray.length);
+                if (currRecording.soundData === undefined) {
+                    soundStickerHeight = 0;
+                }
+                //if (participantsArray.length>1)
+                //{
+                //    totalwaveformsHeight = totalwaveformsHeight + soundStickerHeight;
+                //}
+            }
+
+            /**
+             * get all saved gesture data and stick them on waveforms
+             * @returns {undefined}
+             */
+            function stickGestureData() {
+
+                if (currRecording.gestureData === null || currRecording.gestureData === undefined) {
+                    updateWaveHeight(totalwaveformsHeight);
+                    return;
+                }
+
+                //check if there is single obj then it will not be an array
+                var gestureDataArray = [];
+                if (currRecording.gestureData instanceof Array) {
+                    gestureDataArray = currRecording.gestureData;
+                } else {
+                    gestureDataArray = [currRecording.gestureData];
+                }
+
+                var date = new Date(Date.parse(currRecording.startTime));
+                for (i = 0; i < gestureDataArray.length; i++) {
+                    var gesture = gestureDataArray[i];
+                    var index = participantsArray.indexOf(gesture.username);
+                    var top = soundStickerHeight;
+                    for (var h = 0; h < index; h++) {
+                        top = top + waveformsHeight[h];
+                    }
+                    top = top + waveformHeight;
+
+                    if (gesture.gesture === "Sit" || gesture.gesture === "LieDown") {
+                        if (waveformsHeight[index] === 155) {
+                            top = top + 20;
+                        } else {
+                            top = top + 40;
+                        }
+                    }
+                    if (gesture.gesture === "Yes" || gesture.gesture === "No"
+                            || gesture.gesture === "Wink" || gesture.gesture.indexOf("Look At") > -1) {
+                        top = top + 20;
+                    }
+
+                    var absoluteStartTime = new Date(Date.parse(gesture.startTime));
+                    var relativeStartTime = (absoluteStartTime.getTime() - date.getTime()) / 1000;
+                    var absoluteEndTime = new Date(Date.parse(gesture.endTime));
+                    var gestureDuration = (absoluteEndTime - absoluteStartTime) / 1000;
+                    var jsonString = "[{ \"start\":\"" + relativeStartTime + "\", \"end\":\"" + (gestureDuration + relativeStartTime) + "\", \"top\":\"" + (top) + "\", \"data\":{\"note\":\"" + gesture.gesture + "\"}} ]";
+                    var myObject = eval('(' + jsonString + ')');
+                    var colorIndex = index;
+                    if (colorIndex !== 0) {
+                        colorIndex = colorIndex % 5;
+                    }
+                    loadGestureRegions(myObject, colorIndex, false, false, "16px"
+                            , false, "2", true);
+                }
+                updateWaveHeight(totalwaveformsHeight);
+            }
+
+            function stickSoundData() {
+                if (currRecording.soundData === null || currRecording.soundData === undefined) {
+                    updateWaveHeight(totalwaveformsHeight);
+                    return;
+                }
+                var soundDataArray = [];
+                if (currRecording.soundData instanceof Array) {
+                    soundDataArray = currRecording.soundData;
+                } else {
+                    soundDataArray = [currRecording.soundData];
+                }
+//                waveformsHeight[waveformsHeight.length] = 20;
+//                var top = waveformsHeight[waveformsHeight.length-1];
+
+                var top = 0;
+                var date = new Date(Date.parse(currRecording.startTime));
+                for (i = 0; i < soundDataArray.length; i++) {
+                    var sound = soundDataArray[i];
+                    var absoluteStartTime = new Date(Date.parse(sound.startTime));
+                    var relativeStartTime = (absoluteStartTime.getTime() - date.getTime()) / 1000;
+                    var absoluteEndTime = new Date(Date.parse(sound.stopTime));
+                    var soundDuration = (absoluteEndTime - absoluteStartTime) / 1000;
+                    var jsonString = "[{ \"start\":\"" + relativeStartTime + "\", \"end\":\"" + (soundDuration + relativeStartTime) + "\", \"top\":\"" + (top) + "\", \"data\":{\"note\":\"" + sound.audioName + "\"}} ]";
+                    var myObject = eval('(' + jsonString + ')');
+                    var colorIndex = 3;
+                    loadSoundRegions(myObject, colorIndex, false, false, "16px"
+                            , false, "2", true);
+                }
+                waveformsHeight[0] = waveformsHeight[0] + 20;
+                totalwaveformsHeight = totalwaveformsHeight + 20;
+                updateWaveHeight(totalwaveformsHeight);
+            }
+
+            /**
+             * save transcription
+             * @returns {undefined}
+             */
+            function saveTranscription() {
+                if (typeof $("#start").val() === 'undefined' || typeof $("#end").val() === 'undefined'
+                        || $("#start").val() === "" || $("#end").val() === "") {
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: 'resources/sessionRecordings/transcription/save/',
+                    data: {
+                        id: currRecording.id,
+                        transcriptionId: $("#transcription-id").val(),
+                        startTime: $("#start").val(),
+                        endTime: $("#end").val(),
+                        top: $("#top").val(),
+                        note: $("#note").val()
+                    },
+                    dataType: "json"
+                });
+            }
+
+            /**
+             * delete transcription
+             * @returns {undefined}
+             */
+            function deleteTranscriptionNow() {
+                if (typeof $("#start").val() === 'undefined' || typeof $("#end").val() === 'undefined'
+                        || $("#start").val() === "" || $("#end").val() === "") {
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: 'resources/sessionRecordings/transcription/delete',
+                    data: {
+                        id: currRecording.id,
+                        transcriptionId: $("#transcription-id").val(),
+                    },
+                    dataType: "json",
+                    success: function (data, textStatus, jqXHR) {
+                        wavesurfer.regions.list[$("#transcription-id").val()].remove();
+                    }
+                });
+            }
+
+            /**
+             * wait for 1 sec and then call delete transcription
+             * wait because it was conflicting with save transcription
+             * @returns {undefined}
+             */
+            function deleteTranscription() {
+                setTimeout(deleteTranscriptionNow, 1000);
+            }
+
+            function closeTranscription() {
+                var form = document.forms.edit;
+                form.style.opacity = 0;
+            }
+
+            /**
+             * transcription completed checkbox changed
+             * @returns {undefined}
+             */
+            function transcriptionChanged() {
+
+                var r = confirm("Are you sure?");
+                if (r === true) {
+                    $.ajax({
+                        type: "POST",
+                        url: 'resources/sessionRecordings/recording/transcribed',
+                        data: {
+                            id: currRecording.id,
+                            transcribed: $("#transcribed").is(':checked'),
+                        },
+                        dataType: "json"
+                    });
+                } else {
+                    if ($("#transcribed").is(':checked')) {
+                        $("#transcribed").prop('checked', false);
+                    } else {
+                        $("#transcribed").prop('checked', true);
+                    }
+                }
+            }
+
+            var pauseFun = function () {
+                var playRegionButton = document.querySelector('#play-region');
+                var pauseRegionButton = document.querySelector('#pause-region');
+                playRegionButton.style.display = "block";
+                pauseRegionButton.style.display = "none";
+                if (resetCurrPos) {
+                    currPos = 0;
+                }
+            };
+
+            function playPauseRegion(e) {
+                var playRegionButton = document.querySelector('#play-region');
+                if (playRegionButton.style.display !== "none") {
+                    playRegion(e);
+                } else {
+                    pauseRegion(e);
+                }
+            }
+
+            function pauseRegion(e) {
+                var playRegionButton = document.querySelector('#play-region');
+                var pauseRegionButton = document.querySelector('#pause-region');
+                playRegionButton.style.display = "block";
+                pauseRegionButton.style.display = "none";
+                currPos = wavesurfer.getCurrentTime();
+                resetCurrPos = false;
+                wavesurfer.pause();
+                resetCurrPos = true;
+            }
+
+            function playRegion(e) {
+                var playRegionButton = document.querySelector('#play-region');
+                var pauseRegionButton = document.querySelector('#pause-region');
+                playRegionButton.style.display = "none";
+                pauseRegionButton.style.display = "block";
+                var start = 0;
+                if (currPos === 0) {
+                    start = currRegion.start;
+                } else {
+                    start = currPos;
+                }
+                wavesurfer.play(start, currRegion.end);
+                wavesurfer.on('pause', pauseFun);
+            }
+
+            function removeKeyShortcuts(event) {
+                document.removeEventListener('keydown', keyboardShortcut);
+            }
+
+            function addKeyShortcuts(event) {
+                document.addEventListener('keydown', keyboardShortcut);
+            }
+
+            /**
+             * For the recording name in header
+             * @returns {Number}
+             */
+            function getWidthOfInput() {
+                var tmp = document.createElement("span");
+                tmp.className = "input-element tmp-element";
+                tmp.innerHTML = inputEl.value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                document.body.appendChild(tmp);
+                var theWidth = tmp.getBoundingClientRect().width + 20;
+                document.body.removeChild(tmp);
+                return theWidth;
+            }
+
+            /**
+             * adjust recording name text field according to content
+             * @returns {undefined}
+             */
+            function adjustWidthOfInput() {
+                inputEl.style.width = getWidthOfInput() + "px";
+            }
+
+            /**
+             * If user close window, save the recoding name
+             * @returns {undefined}
+             */
+            window.onclose = function () {
+                alert("Window is colsed");
+                saveRecordingName(document.getElementById("header-text"));
+            }
+
+            /**
+             * recording name save
+             * @param {type} value
+             * @returns {undefined}
+             */
+            function saveRecordingName(inputText) {
+                inputText.value = inputText.value.trim();
+                adjustWidthOfInput();
+                if (inputText.value === "")
+                {
+                    alert("Recording name can't be empty");
+                    inputText.value = $('#header-text').data('val');
+                    adjustWidthOfInput();
+                    return;
+
+                }
+                if (inputText.value !== $('#header-text').data('val'))
+                {
+                    $.ajax({
+                        type: "POST",
+                        url: 'resources/sessionRecordings/updateRecordingName',
+                        data: {
+                            id: currRecording.id,
+                            recordingName: $("#header-text").val(),
+                        },
+                        dataType: "json"
+                    });
+                    $('#header-text').data('val', inputText.value);
+                    if (currRecording.onlyAudio.toString() == "false")
+                    {
+                        $("#video-url").text(inputEl.value);
+                    }
+                }
+            }
+
+
+            /**
+             * for recording name
+             * @param {type} e
+             * @returns {undefined}
+             */
+            function handleKeyPress(e) {
+                var key = e.keyCode || e.which;
+                if (key === 13) {
+                    saveRecordingName(document.getElementById("header-text"));
+                }
+            }
+
+            function goBack() {
+                window.location.href = "SessionRecordings.html";
+            }
+        </script>
+        <style>
+            .docs-title-input:hover {
+                border-color: #e5e5e5;
+            }
+
+            .docs-title-input {
+                border: 1px solid transparent;
+                border-radius: 2px!important;
+                font-size: 18px;
+                height: 20px;
+                line-height: 22px;
+                margin: 0;
+                min-width: 1px;
+                padding: 2px 7px;
+                width:300px;
+                height:25;
+                visibility: hidden;
+            }
+
+            .input-element {
+
+                padding: 2px;
+                background: #fff;
+                font: 12pt sans-serif;
+            }
+
+            .tmp-element {
+                visibility: hidden;
+                white-space: pre;
+            }
+
+            #main {
+                width: 100%
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container" id="main">
+            <input type="hidden" id="view-id">
+            <center>
+                <table class="table table-striped" style="margin-bottom: 0px;width: 80%">
+                    <tr>
+                        <td colspan="3">
+                            <table style="width : 100%">
+                                <tr>
+                                    <td style="width:10%">
+                                        <button onclick="goBack()" class="btn btn-primary">Back</button>
+                                    </td>
+                                    <td align="center" id="recording-name-td" style="vertical-align: middle">
+                                        <input id="header-text" class="form-control docs-title-input input-element" type="text" style="visibility: visible;height: 30px" 
+                                               onkeypress="handleKeyPress(event)" onblur="saveRecordingName(this);
+                                                       addKeyShortcuts(this);"
+                                               onfocus="removeKeyShortcuts(this);" />
+                                    </td>
+                                    <td style="width:10%">
+                                        &nbsp;
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:0px">
+                            <h5>
+                                <label id="video-label">Video :</label>
+                                <a href="javascript:void(0);" id="video-url" target="_blank"></a>
+                            </h5>
+                        </td>
+                        <td style="padding:0px">
+                            <h5>
+                                Tags :
+                                <span class="label label-default" id="tags" style="font-size: small"></span>
+                            </h5>
+                        </td>
+                        <td style="text-align: right;padding:0px">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" id="transcribed" onchange="transcriptionChanged()">
+                                    Transcription Completed
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" align="center">
+                            <form role="form" name="edit" class="form-inline" style="opacity: 0; transition: opacity 300ms linear;">
+                                <input type="hidden" id="transcription-id" />
+                                <input type="hidden" id="top" />
+                                <table width="95%">
+                                    <tr>
+                                        <td style="vertical-align: middle;width: 45px"><label for="start">Start : </label></td>
+                                        <td style="vertical-align: middle;width: 8%;padding-right: 7px"><input style="width:100%" class="form-control" id="start" name="start" /></td>
+                                        <td style="vertical-align: middle;width: 40px"><label for="end">End : </label></td>
+                                        <td style="vertical-align: middle;width: 8%;padding-right: 7px"><input style="width:100%" class="form-control" id="end" name="end" /></td>
+                                        <td style="vertical-align: middle;width: 45px"><label for="note">Note : </label></td>
+                                        <td style="vertical-align: middle;padding-right: 7px"><textarea style="width:100%" class="form-control" id="note" name="note" rows="1" cols="3" onfocus="removeKeyShortcuts(this)" onblur="addKeyShortcuts(this)"></textarea></td>
+                                        <td style="vertical-align: middle;width: 40px;padding-right: 7px">
+                                            <button class="btn btn-primary" id="play-pause-region" onclick="playPauseRegion(this)">
+                                                <span id="play-region">
+                                                    <i class="glyphicon glyphicon-play"></i>
+                                                </span>
+
+                                                <span id="pause-region" style="display: none;">
+                                                    <i class="glyphicon glyphicon-pause"></i>
+                                                </span>
+                                            </button>
+                                        </td>
+                                        <td style="vertical-align: middle;width: 80px;padding-right: 7px"><button type="submit" class="btn btn-danger btn-block" onclick="deleteTranscription()" data-action="region-removed">Delete</button></td>  
+                                        <td style="vertical-align: middle;width: 66px"><button type="button" class="btn btn-default btn-block" onclick="closeTranscription()">Close</button></td>  
+                                    </tr>
+                                </table>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+
+                            <div id="wave-timeline">
+                            </div>
+                            <div id='waveform'>
+                                <div class='progress progress-striped active' id='progress-bar'>
+                                    <div class='progress-bar progress-bar-info'></div>
+                                </div>
+                            </div>
+
+                            <div class="controls" style="padding-top:10px;padding-bottom: 0px">
+                                <button class="btn btn-primary" data-action="back">
+                                    <i class="glyphicon glyphicon-step-backward"></i>
+                                </button>
+
+                                <button class="btn btn-primary" data-action="play">
+                                    <span id="play">
+                                        <i class="glyphicon glyphicon-play"></i>
+                                    </span>
+
+                                    <span id="pause" style="display: none">
+                                        <i class="glyphicon glyphicon-pause"></i>
+                                    </span>
+                                </button>
+
+                                <button class="btn btn-primary" data-action="forth">
+                                    <i class="glyphicon glyphicon-step-forward"></i>
+                                </button>
+
+                                <button class="btn btn-primary" data-action="toggle-mute">
+                                    <i class="glyphicon glyphicon-volume-off"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                </table>
+
+                <iframe src="" id="embed-video" width="640" height="360" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+            </center>
+        </div>
+    </body>
+</html>

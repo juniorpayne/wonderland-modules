@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="jipcam1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/modules/apps/2d/video/lib/jipcam.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

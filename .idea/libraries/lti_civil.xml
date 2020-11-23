@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="lti-civil">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/mediaboard/ext/lti-civil.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

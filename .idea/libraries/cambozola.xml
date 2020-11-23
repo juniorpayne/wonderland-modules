@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="cambozola">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/stable/webcamviewer/lib/cambozola.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

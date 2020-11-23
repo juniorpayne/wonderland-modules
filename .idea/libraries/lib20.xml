@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib20">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/mediaboard/lib/batik-all.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/mediaboard/lib/xml-apis.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/mediaboard/lib/xml-apis-ext.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

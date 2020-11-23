@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib6">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/clock2/lib/jmetree_jme2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/clock2/lib/propertytable.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/clock2/lib/trident.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

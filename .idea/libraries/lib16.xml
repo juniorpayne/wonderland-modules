@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib16">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/modulator/lib/propertytable.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/modulator/lib/trident.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/modulator/lib/scenemonitor_jme2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/modulator/lib/jmejtree_jme2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/modulator/lib/sm_properties_jme2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,23 @@
+<component name="libraryTable">
+  <library name="lib8">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/quercus.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/groovy-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/jawk-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/jruby-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/java-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/jython.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/sleep.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/resin-util.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/javafxc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/js.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/jython-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/groovy-all-1.5.6.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/js-engine.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/jruby.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/scriptingComponent/lib/jawk.0_14.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

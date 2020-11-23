@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="voicelib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/marbleous/lib/voicelib.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

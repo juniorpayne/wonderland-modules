@@ -1,0 +1,673 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+    "http://www.w3.org/TR/html4/loose.dtd">
+
+<html>
+    <head>
+        <title>Role Play Recordings</title>
+        <link href="/wonderland-web-front/css/module.css" rel="stylesheet" type="text/css" media="screen">
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <link href="styles/bootstrap.min.css" type="text/css" rel="stylesheet">
+        <link href="styles/bootstrap.min.css" type="text/css" rel="stylesheet">
+
+        <script src="scripts/date.js" type="text/javascript"></script>
+        <script src="scripts/jquery.min.js" type="text/javascript"></script>
+        <script src="scripts/bootstrap.min.js" type="text/javascript"></script>
+
+        <style>
+            .results tr[visible='false'],
+            .no-result{
+                display:none;
+            }
+
+            .results tr[visible='true']{
+                display:table-row;
+            }
+
+            .counter{
+                padding:8px; 
+                color:#ccc;
+            }
+
+            img:hover{
+                cursor: pointer;
+            }
+
+            #overlay {
+                background-image: url(loading.gif);
+                background-repeat: no-repeat; 
+                background-position: center;
+                background-color: rgba(0, 0, 0, 0.2);
+                z-index: 999;
+                position: fixed;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                display: none;
+                pointer-events: none;
+            }
+        </style>
+
+        <script type="text/javascript">
+            var DEBUG = true; //false = hide console logs
+            if (!DEBUG) {
+                if (!window.console)
+                    window.console = {};
+                var methods = ["log", "debug", "warn", "info"];
+                for (var i = 0; i < methods.length; i++) {
+                    console[methods[i]] = function () {
+                    };
+                }
+            }
+
+            var sortBy = 0;
+            var isASort = true;
+            var isASortByGroup = false;
+            var isASortByT = false;
+
+            $(document).ready(function () {
+                update(aSort);
+                $('#refreshButton').click(function () {
+                    update(aSort);
+                });
+                $("#searchText").keyup(function () {
+                    searchFilterTable();
+                });
+                populateConfiguration();
+            });
+
+            /**
+             * 
+             * @param {type} sortFun ascending or descending sort function?
+             * @returns {Number}
+             */
+            function update(sortFun) {
+                $.get('resources/sessionRecordings', function (data) {
+                    if (!(data.recordings instanceof Array)) {
+                        data.recordings = [data.recordings];
+                    }
+
+                    data.recordings.sort(sortFun);
+
+                    $('#recordingsTable').html('<thead>' +
+                            '<tr class="warning no-result">' +
+                            '<td colspan="4"><i class="fa fa-warning"></i> No result</td>' +
+                            '</tr>' +
+                            '<tr>' +
+                            '<th>#</th>' +
+                            '<th>' +
+                            '<input type="checkbox" id="selectall" onChange="selectAllCB()">' +
+                            '</th>' +
+                            '<th style="width:40%"><a style="color:black;" href="javascript:void(0);" id="sortLink" onClick="sortTable()">Recordings</a></th>' +
+                            '<th><a style="color:black" href="javascript:void(0);" id="sortLinkGroup" onClick="sortTableByGroup()">Group</a></th>' +
+                            '<th>Tags</th>' +
+                            '<th>Length</th>' +
+                            '<th><a style="color:black" href="javascript:void(0);" id="sortLinkT" onClick="sortTableByT()">T<sup>*</sup></a></th>' +
+                            '</tr></thead>');
+
+                    for (var i = 0; i < data.recordings.length; i++) {
+                        var recording = data.recordings[i];
+                        var row = $('<tr>');
+                        var chk = '<input type="checkbox" class="checkbox1">';
+                        $('<th scope="row">' + (i + 1) + '</th>').appendTo(row);
+                        $('<td>' + chk + '</td>').appendTo(row);
+                        var date = new Date(Date.parse(recording.startTime));
+                        var endTime = new Date(Date.parse(recording.endTime));
+                        var difference = msToTime(endTime - date);
+
+                        $('<td><a href="audio-player.html?id=' + encodeURIComponent(recording.id) + '" id="' + recording.id + '" > '
+                                + recording.recordingName + '</a></td>').appendTo(row);
+                        $('<td>' + recording.groupName + '</td>').appendTo(row);
+                        $('<td>' + recording.tagsCS + '</td>').appendTo(row);
+                        $('<td> ' + difference + ' </td>').appendTo(row);
+                        if (recording.transcribed === "true") {
+                            $('<td>&#10004;</td>').appendTo(row);
+                        } else {
+                            $('<td></td>').appendTo(row);
+                        }
+                        $('#recordingsTable').append(row);
+                    }
+
+                    searchFilterTable();
+
+                    if (sortBy === 0) {
+                        if (isASort) {
+                            $("#sortLink").append("<small>&#x25B2;</small>");
+                        } else {
+                            $("#sortLink").append("<small>&#x25BC;</small>");
+                        }
+                    } else if (sortBy === 1) {
+                        if (isASortByGroup) {
+                            $("#sortLinkGroup").append("<small>&#x25B2;</small>");
+                        } else {
+                            $("#sortLinkGroup").append("<small>&#x25BC;</small>");
+                        }
+                    } else if (sortBy === 2) {
+                        if (isASortByT) {
+                            $("#sortLinkT").append("<small>&#x25B2;</small>");
+                        } else {
+                            $("#sortLinkT").append("<small>&#x25BC;</small>");
+                        }
+                    }
+                }).complete(function () {
+                    updating = false;
+                });
+            }
+
+            /**
+             * filter table data by search text also preserve sorting
+             * @param {type} 
+             * @returns {undefined}
+             */
+            function searchFilterTable() {
+                var searchTerm = $("#searchText").val();
+                var searchSplit = searchTerm.replace(/ /g, "'):containsi('");
+
+                $.extend($.expr[':'], {'containsi': function (elem, i, match, array) {
+                        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+                    }
+                });
+                $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function (e) {
+                    $(this).attr('visible', 'false');
+                });
+                $(".results tbody tr:containsi('" + searchSplit + "')").each(function (e) {
+                    $(this).attr('visible', 'true');
+                });
+
+                var jobCount = $('.results tbody tr[visible="true"]').length;
+                $('.counter').text(jobCount + ' item');
+
+                if (jobCount === '0') {
+                    $('.no-result').show();
+                } else {
+                    $('.no-result').hide();
+                }
+            }
+
+            var aSort = function (a, b) {
+                var tsa = Date.parse(a.startTime);
+                var tsb = Date.parse(b.startTime);
+                return tsb - tsa;
+            };
+            var dSort = function (a, b) {
+                var tsa = Date.parse(a.startTime);
+                var tsb = Date.parse(b.startTime);
+                return tsa - tsb;
+            }
+
+            var aSortByGroup = function (a, b) {
+                if (a.groupName < b.groupName)
+                    return -1;
+                if (a.groupName > b.groupName)
+                    return 1;
+                return 0;
+            };
+            var dSortByGroup = function (a, b) {
+                if (a.groupName > b.groupName)
+                    return -1;
+                if (a.groupName < b.groupName)
+                    return 1;
+                return 0;
+            };
+
+            var aSortByT = function (a, b) {
+                if (a.transcribed < b.transcribed)
+                    return -1;
+                if (a.transcribed > b.transcribed)
+                    return 1;
+                return 0;
+            };
+            var dSortByT = function (a, b) {
+                if (a.transcribed > b.transcribed)
+                    return -1;
+                if (a.transcribed < b.transcribed)
+                    return 1;
+                return 0;
+            };
+
+            function msToTime(duration) {
+                var milliseconds = parseInt((duration % 1000) / 100)
+                        , seconds = parseInt((duration / 1000) % 60)
+                        , minutes = parseInt((duration / (1000 * 60)) % 60)
+                        , hours = parseInt((duration / (1000 * 60 * 60)) % 24);
+
+                hours = (hours < 10) ? "0" + hours : hours;
+                minutes = (minutes < 10) ? "0" + minutes : minutes;
+                seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+                return hours + ":" + minutes + ":" + seconds;
+            }
+
+            function sortTable() {
+                sortBy = 0;
+                if (isASort) {
+                    isASort = false;
+                    update(dSort);
+                } else {
+                    isASort = true;
+                    update(aSort);
+                }
+            }
+
+            function sortTableByGroup() {
+                sortBy = 1;
+                if (isASortByGroup) {
+                    isASortByGroup = false;
+                    update(dSortByGroup);
+                } else {
+                    isASortByGroup = true;
+                    update(aSortByGroup);
+                }
+            }
+
+            function sortTableByT() {
+                sortBy = 2;
+                if (isASortByT) {
+                    isASortByT = false;
+                    update(dSortByT);
+                } else {
+                    isASortByT = true;
+                    update(aSortByT);
+                }
+            }
+
+            function selectAllCB() {
+                var mainCB = $("#selectall");
+                if (mainCB.is(":checked")) {
+                    $('.checkbox1').each(function () {
+                        this.checked = true;
+                    });
+                } else {
+                    $('.checkbox1').each(function () {
+                        this.checked = false;
+                    });
+                }
+            }
+
+            /**
+             * delete recordings
+             * @param {type}
+             * @returns {undefined}
+             */
+            function deleteData() {
+                var values = new Array();
+                $('#recordingsTable').find('tr').each(function () {
+                    var row = $(this);
+                    if (row.find('input[type="checkbox"]').attr('id') !== 'selectall' && row.find('input[type="checkbox"]').is(':checked'))
+                    {
+                        values.push(row.find('a').attr('id'));
+                    }
+                });
+
+                if (values.length > 0) {
+                    if (confirm("Are you you want to delete the selected recordings?"))
+                    {
+                        $("#overlay").show();
+                        $.ajax({
+                            type: "POST",
+                            url: 'resources/sessionRecordings/deleteRecordingData',
+                            data: {
+                                ids: values.toString()
+                            },
+                            dataType: "json",
+                            success: function () {
+                                update(aSort);
+                                $('#overlay').hide();
+                            },
+                            error: function (jqXHR, textStatus, errorThrown) {
+                                alert("error " + jqXHR + " status " + textStatus + " error= " + errorThrown);
+                            }
+                        });
+
+                    }
+                }
+                else {
+                    alert("No items selected to delete");
+                    return;
+                }
+
+            }
+
+            /**
+             * populate max length and group passwords from xml file
+             * @returns {undefined}
+             */
+            function populateConfiguration() {
+                var groupName = "";
+                var pass = "";
+                populateMaxLength();
+                populateFfmpegPath();
+                populateVimeoToken();
+                populateDefaultGroup();
+                $("#loadingGroupText").show();
+                $.ajax({
+                    url: 'resources/sessionRecordings/getGroups',
+                    type: 'GET',
+                    success: function (data) {
+                        $("#loadingGroupText").hide();
+                        $("#groupTable").show();
+                        if (!(data.groupList instanceof Array)) {
+                            data.groupList = [data.groupList];
+                        }
+                        if (!(data.password instanceof Array)) {
+                            data.password = [data.password];
+                        }
+                        for (var i = 0; i < data.groupList.length; i++) {
+                            groupName = data.groupList[i];
+                            pass = data.password[i];
+
+                            var row = "<tr style='background-color:white'>" +
+                                    "     <td style='border:none'>" + groupName.toString() + "</td>" +
+                                    "     <td style='border:none;padding-left:15px'>" +
+                                    "          <input type='password' class='form-control' onkeypress=\"return event.keyCode!=13\" name='" + groupName.toString() + "'" +
+                                    "                             value='" + pass.toString() + "'" +
+                                    "                             oninput='IsDirty(this)' style=\"align:left;margin-right:0.4%\" />" +
+                                    "     </td>" +
+                                    "     <td style='border:none;vertical-align:middle;padding:0'>" +
+                                    "     <img src='showhidepassword.jpg' width='25px' height='19px' id='" + groupName + "' onmousedown='showPassword(\"" + groupName + "\")' onmouseup='hidePassword(\"" + groupName + "\")' onmouseout='hidePassword(\"" + groupName + "\")' ondrag='hidePassword(\"" + groupName + "\")' />" +
+                                    "     </td>" +
+                                    " </tr>";
+                            $("#groupTableTB").append(row);
+
+                        }
+                        var btn = "<tr style='background-color:white'>" +
+                                "     <td style='border:none'>&nbsp;</td>" +
+                                "     <td style='border:none;padding-left:15px'>" +
+                                "          <button type='submit' id='save' onclick='saveGroupPasswords(event)' class='btn btn-primary'>Save</button>" +
+                                "          <img id='saveLoadingIcon' width='30px' src='loading.gif' style='display:none'></img>" +
+                                "     </td>" +
+                                " </tr>";
+                        $('#groupTableTB').append(btn);
+                        $('#save').attr('disabled', 'disabled');
+                    },
+                    error: function (data) {
+                        $("#loadingGroupText").text("No group data found!");
+                    }
+                });
+            }
+
+            function populateMaxLength() {
+                $.get('resources/sessionRecordings/getMaxLength', function (data) {
+                    $('#maxLengthInput').val(data.maxLength);
+                });
+            }
+
+            /**
+             * save max length
+             * @param {type} inputText
+             * @returns {undefined}
+             */
+            function saveMaxLength(inputText) {
+                if (inputText.value !== inputText.defaultValue) {
+                    $.ajax({
+                        type: "POST",
+                        url: 'resources/sessionRecordings/saveMaxLength',
+                        data: {
+                            maxLength: inputText.value
+                        },
+                        dataType: "json"
+                    });
+                }
+            }
+            
+            function populateFfmpegPath() {
+                $.get('resources/sessionRecordings/getffmpegPath', function (data) {
+                    $('#ffmpegPath').val(data.ffmpegPath);
+                });
+            }
+
+            function saveFfmpegPath(inputText) {
+                if(inputText.value !=="") {
+                    $.ajax({
+                        type: "POST",
+                        url: 'resources/sessionRecordings/saveffmpegPath',
+                        data: {
+                            path: inputText.value
+                        },
+                        dataType: "json",
+                    });
+                }
+            }
+
+            function populateVimeoToken() {
+                $.get('resources/sessionRecordings/getVimeoToken', function (data) {
+                    $('#vimeoToken').val(data.vimeoToken);
+                });
+            }
+
+            function saveVimeoKey(inputText) {
+                    $.ajax({
+                        type: "POST",
+                        url: 'resources/sessionRecordings/saveVimeoToken',
+                        data: {
+                            key: inputText.value
+                        },
+                        dataType: "json",
+                    });
+            }
+            
+            function saveDefaultGroup(inputText) {
+                    $.ajax({
+                        type: "POST",
+                        url: 'resources/sessionRecordings/saveDefaultGroup',
+                        data: {
+                            group: inputText.value
+                        },
+                        dataType: "json",
+                    });
+            }
+            
+            function populateDefaultGroup() {
+                $.get('resources/sessionRecordings/getDefaultGroup', function (data) {
+                    $('#defaultGroup').val(data.defaultGroup);
+                });
+            }
+            
+            /**
+             * check if there is any change in configuration then enable save button
+             * @param {type} inputText
+             * @returns {undefined}
+             */
+            function IsDirty(inputText) {
+                if (inputText.value !== inputText.defaultValue) {
+                    $('#save').removeAttr('disabled');
+                }
+                else {
+                    if (isAllDefault())
+                    {
+                        $('#save').attr('disabled', 'disabled');
+                    }
+                }
+            }
+
+            /**
+             * compare textfiled values with old values
+             * @returns {Boolean}
+             */
+            function isAllDefault() {
+                var inputList = document.querySelectorAll("input[type=password]");
+                for (var i = 0; i < inputList.length; i++) {
+                    if (inputList[i].value !== inputList[i].defaultValue) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+
+            /**
+             * To see password
+             * @param {type} target
+             * @returns {undefined}
+             */
+            function showPassword(target) {
+                var name = '[name="' + target + '"]';
+                $(name).attr("type", "text");
+            }
+
+            /**
+             * hide password
+             * @param {type} target
+             * @returns {undefined}
+             */
+            function hidePassword(target) {
+                var name = '[name="' + target + '"]';
+                $(name).attr("type", "password");
+            }
+
+            /**
+             * save passwords for groups
+             * @param {type} e
+             * @returns {undefined}
+             */
+            function saveGroupPasswords(e) {
+
+                $('#save').attr('disabled', 'disabled');
+                e.preventDefault();
+                var names = {};
+                var inputList = document.querySelectorAll("input[type=password]");
+                var emptyGroups = "";
+                for (var i = 0; i < inputList.length; i++) {
+                    if (inputList[i].value === "") {
+                        emptyGroups += ", \"" + $(inputList[i]).attr("name") + "\"";
+                    }
+                    if ((inputList.length - 1) === i && emptyGroups !== "") {
+                        alert("Password should not be empty for" + emptyGroups + " Group");
+                    }
+                }
+                console.log("collected data = " + names)
+                $("#saveLoadingIcon").show();
+                var form = $('#groupListForm');
+                $.ajax({
+                    type: "POST",
+                    url: 'resources/sessionRecordings/saveGroupPassword',
+                    data: form.serialize(),
+                    dataType: "json",
+                    success: function () {
+                        $("#saveLoadingIcon").hide();
+                        for (var i = 0; i < inputList.length; i++) {
+                            if (inputList[i].value !== "") {
+                                inputList[i].defaultValue = inputList[i].value;
+                            }
+                            else {
+                                inputList[i].value = inputList[i].defaultValue;
+                            }
+
+                        }
+                        if (isAllDefault()) {
+                            //Every filed is at default
+                        }
+                    }
+                });
+
+            }
+        </script>
+    </head>
+    <body>
+        <div id="overlay"></div>
+        <div class="container" style="width: 100%">
+            <!-- Tabs -->
+            <ul class="nav nav-tabs">
+                <li class="active"><a data-toggle="tab" href="#list">Recording List</a></li>
+                <li><a data-toggle="tab" href="#configuration">Configuration</a></li>
+            </ul>
+
+            <!-- Tab content -->
+            <div class="tab-content">
+                <!-- Recording list -->
+                <div id="list" class="tab-pane fade in active">
+                    <br />
+                    <div class="form-group form-inline" style="width: 100%">
+                        <label style="width: 6%">Search : </label>
+                        <input type="text" style="width: 92%" class="form-control" id="searchText">
+                    </div>
+                    <div class="form-group form-inline">
+                        <button type="button" class="btn btn-primary">Export Selected</button>
+                        &nbsp
+                        <button type="button" id="refreshButton" class="btn btn-primary">Refresh</button>
+                        &nbsp
+                        <button type="button" class="btn btn-primary" onclick="deleteData()">Delete Selected</button>
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        (<b>T<sup>*</sup></b> = Transcribed)
+
+                    </div>
+                    <div class="form-group">
+                        <table class="table table-striped results" id="recordingsTable">
+                        </table>
+                    </div>
+                </div>
+                <!-- Configuration -->
+                <div id="configuration" class="tab-pane fade">
+                    <br />
+                    <form class="form-horizontal " role="form" id="maxLengthForm">
+                        <table class="table" style="width:auto;border-collapse: initial; align:left;">
+                            <tbody>
+                                <tr>
+                                    <td style="border:none">
+                                        <label class="control-label">Max Length of Recording : </label>
+                                    </td>
+                                    <td style="border:none;width: 80px">
+                                        <input id="maxLengthInput" type="number" min="1" size="1" class="form-control" oninput="saveMaxLength(this)" />
+                                    </td>
+                                    <td style="border:none">
+                                        <label class="control-label">minutes</label>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <form>
+                        <table class="table" style="width:auto;border-collapse: initial; align:left;">
+                            <tbody>
+                                <tr>
+                                    <td style="border:none; vertical-align: middle;">
+                                        <label class="control-label">Full FFMPEG path: </label>
+                                    </td>
+                                    <td style="border:none;">
+                                        <input id="ffmpegPath" type="text" class="form-control" size="31" onblur="saveFfmpegPath(this)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <form>
+                        <table class="table" style="width:auto;border-collapse: initial; align:left;">
+                            <tbody>
+                                <tr>
+                                    <td style="border:none; vertical-align: middle;">
+                                        <label class="control-label">Vimeo API Access Token: </label>
+                                    </td>
+                                    <td style="border:none;">
+                                        <input id="vimeoToken" type="text" class="form-control" size="31" onblur="saveVimeoKey(this)" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border:none;  vertical-align: middle;">
+                                        <label class="control-label">Default Group to Upload Video: </label>
+                                    </td>
+                                    <td style="border:none;">
+                                        <input id="defaultGroup" type="text" class="form-control" size="31" onblur="saveDefaultGroup(this)" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
+                    <p id="loadingGroupText"><i>Fetching Groups...</i></p>
+                    <form class="form-horizontal" role="form" id="groupListForm" name="password" style="align:left">
+                        <table class="table" id="groupTable" style="width:auto;border-collapse: initial; align:left;display: none">
+                            <thead>
+                                <tr>
+                                    <th style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;">Group Name</th>
+                                    <th style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;padding-left:15px">Password</th>
+                                    <th style="border-bottom: 1px solid #ddd;border-top: 1px solid #ddd;">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody id="groupTableTB">
+
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

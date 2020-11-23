@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lib11">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/screenshare/lib/atmosphere-compat-tomcat-0.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/screenshare/lib/atmosphere-compat-weblogic-0.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/screenshare/lib/atmosphere-compat-jbossweb-0.6.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/screenshare/lib/atmosphere-runtime-0.6.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

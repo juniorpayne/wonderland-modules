@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="compassmodule">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/compass-module/dist/compassmodule.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

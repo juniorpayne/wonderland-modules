@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="lib5">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/cmu-module/lib/foundation.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/cmu-module/lib/ide.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/cmu-module/lib/stage.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/cmu-module/lib/lg_walkandtouch.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/cmu-module/lib/moveandturn.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

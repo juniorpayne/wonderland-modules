@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="ruler">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/ruler/dist/ruler.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

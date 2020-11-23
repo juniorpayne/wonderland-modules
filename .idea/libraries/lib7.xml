@@ -1,0 +1,26 @@
+<component name="libraryTable">
+  <library name="lib7">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/activation.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jersey.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jsr311-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/rome-0.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jaxb-impl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jdom-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/grizzly-http-webserver-1.7.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/persistence-api-1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jaxb-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jaxws-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/http.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jettison-1.0-RC1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jsr173_api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jsp-api-2.0-20040521.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/wadl2java.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jsr250-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/jaxb-xjc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/modules/web/WonderlandWorldBuilder/lib/asm-3.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

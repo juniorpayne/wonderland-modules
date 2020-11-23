@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<multimesh-evolver-avatar>
+    <name>AAMedical</name>
+    <avatar-gender>
+        <gender>1</gender>
+    </avatar-gender>
+    <avatar-head>
+        <model>HeadPart.dbn</model>
+    </avatar-head>
+    <avatar-hands>
+        <model>HandsPart.dbn</model>
+        <shape>RHandNudeShape</shape>
+        <shape>LHandNudeShape</shape>
+    </avatar-hands>
+    <avatar-torso>
+        <model>TorsoPart.dbn</model>
+        <shape>TorsoNudeShape</shape>
+    </avatar-torso>
+    <avatar-legs>
+        <model>LegsPart.dbn</model>
+        <shape>LegsNudeShape</shape>
+    </avatar-legs>
+    <avatar-feet>
+        <model>FeetPart.dbn</model>
+        <shape>RFootNudeShape</shape>
+        <shape>LFootNudeShape</shape>
+    </avatar-feet>
+</multimesh-evolver-avatar>

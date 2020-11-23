@@ -1,0 +1,16 @@
+<component name="libraryTable">
+  <library name="lib14">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/httpcore-4.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/commons-io-1.4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/commons-logging-1.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/httpclient-4.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/httpmime-4.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/httpclient-cache-4.1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/jodconverter-2.2.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/office-converter/lib/commons-codec-1.4.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

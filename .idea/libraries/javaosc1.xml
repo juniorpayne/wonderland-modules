@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="javaosc1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/wonderOSC/samples/sunSPOT/SpotForwarder/lib/javaosc.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

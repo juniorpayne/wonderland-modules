@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir=".." name="gamekiosk-IDE">
+    <!-- TODO: edit the following target according to your needs -->
+    <!-- (more info: http://www.netbeans.org/kb/articles/freeform-config.html#runsingle) --> 
+    <target name="run-selected-file-in-classes">
+        <ant antfile="build.xml" target="dist"/>
+
+        <fail unless="run.class">Must set property 'run.class'</fail>
+        <java classname="${run.class}" failonerror="true" fork="true">
+            <classpath>
+                <pathelement path="build/classes:src/classes:../../wonderland/core/build/lib/wonderland-client.jar:../../wonderland/core/build/lib/wonderland-common.jar:../../wonderland/core/ext/jme20/target/jme.jar:../../wonderland/core/ext/common/mtgame.jar:../../wonderland/core/ext/sgs/sgs-server-dist-0.9.10/lib/sgs-server-api-0.9.10.jar:../../wonderland/modules/tools/sharedstate/build/server/sharedstate-server.jar:../../wonderland/modules/tools/sharedstate/build/client/sharedstate-client.jar:../../wonderland-modules/unstable/videoplayer/build/client/videoplayer-client.jar:../../wonderland/core/ext/common/xuggle-xuggler.jar"/>
+            </classpath>
+        </java>
+    </target>
+</project>

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="PDFRenderer4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/stable/pdfviewer/lib/PDFRenderer.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

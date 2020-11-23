@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="tightvnc-src">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/modules/apps/2d/tightvncviewer/tightvnc-src.zip!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="lib4">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/stable/whiteboard/lib/xml-apis-ext.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/stable/whiteboard/lib/xml-apis.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/stable/whiteboard/lib/batik-all.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

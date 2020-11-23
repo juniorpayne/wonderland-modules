@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="web-lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/web-lib/vimeo.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/session-recorder/lib/web-lib/jmf.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

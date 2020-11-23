@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="lib2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/EZScript/lib/lti-civil.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/EZScript/lib/lti-civil-noutils.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/EZScript/lib/lti-civil-no_s_w_t.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/EZScript/lib/jbullet.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

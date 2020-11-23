@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="lib10">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/sharedstate-test/lib/js.jar!/" />
+      <root url="jar://$PROJECT_DIR$/0.5/unstable/sharedstate-test/lib/js-engine.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
