@@ -720,14 +720,16 @@ public class WhiteboardWindow extends Window2D {
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
                             (int) currentPoint.getX(), (int) currentPoint.getY());
-                    
+
 
                 }else if (currentTool == WhiteboardTool.PENCIL) {
                     LOGGER.fine("drawing line: " + pressedPoint.getX() + ", " + pressedPoint.getY()
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
-                    g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
-                            (int) pressedPoint.getX(), (int) pressedPoint.getY());
+//                    g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
+//                            (int) pressedPoint.getX(), (int) pressedPoint.getY());
+//
                     //g2d.drawLine();
+                    g2d.drawOval((int) r.getX(), (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
                 }
                 else {
                     Rectangle r = WhiteboardUtils.constructRectObject(pressedPoint, currentPoint);
