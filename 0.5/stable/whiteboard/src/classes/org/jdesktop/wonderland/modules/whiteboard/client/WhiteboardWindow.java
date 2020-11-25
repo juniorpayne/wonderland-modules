@@ -729,6 +729,7 @@ public class WhiteboardWindow extends Window2D {
 //                            (int) pressedPoint.getX(), (int) pressedPoint.getY());
 //
                     //g2d.drawLine();
+                    Rectangle r = WhiteboardUtils.constructRectObject(pressedPoint, currentPoint);
                     g2d.drawOval((int) r.getX(), (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
                 }
                 else {
