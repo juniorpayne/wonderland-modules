@@ -109,7 +109,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
         toolTipTextMap.put(textButton, " add text ");
         toolTipTextMap.put(fontButton, " change font ");
         toolTipTextMap.put(pencilButton, " pencil ");
-        toolTipTextMap.put(lineButton, " line ");
+        toolTipTextMap.put(lineButton, " lineboo ");
         toolTipTextMap.put(rectangleButton, " rectangle ");
         toolTipTextMap.put(rectangleFillButton, " filled rectangle ");
         toolTipTextMap.put(ellipseButton, " ellipse ");
@@ -515,6 +515,8 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
                 .add(0, 0, 0)
                 .add(fontButton)
                 .add(0, 0, 0)
+                .add(pencilButton)
+                .add(0, 0, 0)
                 .add(lineButton)
                 .add(0, 0, 0)
                 .add(rectangleButton)
@@ -552,6 +554,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
                     .add(moveableImage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(newButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(selectButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pencilButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lineButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(rectangleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(ellipseButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
