@@ -707,6 +707,7 @@ public class WhiteboardWindow extends Window2D {
         public void paint(Graphics g) {
             Point currentPoint = svgMouseListener.getCurrentPoint();
             Point pressedPoint = svgMouseListener.getPressedPoint();
+            ArrayList<Point> points = new ArrayList<Point>();
             if (currentPoint != null) {
                 Graphics2D g2d = (Graphics2D) g;
 
@@ -719,11 +720,13 @@ public class WhiteboardWindow extends Window2D {
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
                             (int) currentPoint.getX(), (int) currentPoint.getY());
+                    
+
                 }else if (currentTool == WhiteboardTool.PENCIL) {
                     LOGGER.fine("drawing line: " + pressedPoint.getX() + ", " + pressedPoint.getY()
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
-                            (int) currentPoint.getX(), (int) currentPoint.getY());
+                            (int) pressedPoint.getX(), (int) pressedPoint.getY());
                     //g2d.drawLine();
                 }
                 else {
