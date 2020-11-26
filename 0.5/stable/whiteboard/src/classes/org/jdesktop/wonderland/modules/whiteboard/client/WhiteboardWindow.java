@@ -232,6 +232,25 @@ public class WhiteboardWindow extends Window2D {
     }
 
     /**
+     *
+     *
+     *
+     *
+     */
+    public ArrayList<Point> getPoints(){
+        return points;
+    }
+    /**
+     *
+     *
+     *
+     *
+     */
+    public void removePoints(){
+        points.clear();
+    }
+
+    /**
      * Sets the display mode for the control panel to in-world or on-HUD
      *
      * @param mode the control panel display mode

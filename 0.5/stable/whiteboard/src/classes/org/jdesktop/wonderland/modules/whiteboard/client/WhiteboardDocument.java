@@ -114,10 +114,13 @@ public class WhiteboardDocument implements SVGDocumentLoaderListener {
         return svgDocument.getDocumentElement();
     }
 
-    public Element createElement(WhiteboardTool currentTool, Point pressedPoint, Point releasedPoint) {
+    public Element createElement(WhiteboardTool currentTool, Point pressedPoint, Point releasedPoint, ArrayList<Point> points) {
         Element element = null;
 
         switch (currentTool) {
+            case PENCIL:
+                element = createPencilElement(points , whiteboardWindow.getCurrentColor(), whiteboardWindow.getStrokeWeight());
+                break;
             case LINE:
                 element = createLineElement(pressedPoint, releasedPoint, whiteboardWindow.getCurrentColor(), whiteboardWindow.getStrokeWeight());
                 break;
@@ -143,6 +146,31 @@ public class WhiteboardDocument implements SVGDocumentLoaderListener {
         }
 
         return element;
+    }
+
+    public Element createPencilElement(ArrayList<Point> points, Color lineColor, Float strokeWeight) {
+        //Create the pencil elements
+        String d;
+        Element pencil = svgDocument.createElementNS(WhiteboardUtils.svgNS, "path");
+        d = "M" + points.get(0).x + " " points.get(0).y;
+        for(int count =1; count < points.size() -1; count++) {
+            Point p1 = points.get(count);
+            d = d+ "L"+p1.x +" " + p1.y +" ";
+        }
+//        pencil.setAttributeNS(null, "d", Integer.valueOf(start.x).toString());
+//
+//        Element line = svgDocument.createElementNS(WhiteboardUtils.svgNS, "pencil");
+//        line.setAttributeNS(null, "x1", Integer.valueOf(start.x).toString());
+//        line.setAttributeNS(null, "y1", Integer.valueOf(start.y).toString());
+//        line.setAttributeNS(null, "x2", Integer.valueOf(end.x).toString());
+//        line.setAttributeNS(null, "y2", Integer.valueOf(end.y).toString());
+//        line.setAttributeNS(null, "stroke", whiteboardWindow.getToolManager().getGlobalColor());
+//        line.setAttributeNS(null, "stroke-width", Float.toString(strokeWeight));
+//        line.setAttributeNS(null, "name", start.x + "," + start.y + "," + end.x + "," + end.y + ",0");
+//        String idString = whiteboardWindow.getCellUID(whiteboardWindow.getApp()) + System.currentTimeMillis();
+//        line.setAttributeNS(null, "id", idString);
+//        LOGGER.fine("whiteboard: created line: " + line);
+        return pencil;
     }
 
     public Element createLineElement(Point start, Point end, Color lineColor, Float strokeWeight) {
