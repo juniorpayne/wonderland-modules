@@ -116,6 +116,7 @@ public class WhiteboardWindow extends Window2D {
     private WhiteboardControlPanel controls;
     protected final Object actionLock = new Object();
     // drawing variables
+    private ArrayList<Point> points = new ArrayList<Point>();
     private float strokeWeight = 3;
     private Overlay drawingOverlay = new DrawingOverlay();
     private Overlay selectionOverlay = new SelectionOverlay();
@@ -708,7 +709,7 @@ public class WhiteboardWindow extends Window2D {
             Point currentPoint = svgMouseListener.getCurrentPoint();
             Point pressedPoint = svgMouseListener.getPressedPoint();
 
-            ArrayList<Point> points = new ArrayList<Point>();
+
             if (currentPoint != null) {
                 Graphics2D g2d = (Graphics2D) g;
 
@@ -727,9 +728,13 @@ public class WhiteboardWindow extends Window2D {
                     LOGGER.fine("drawing line: " + pressedPoint.getX() + ", " + pressedPoint.getY()
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     LOGGER.warning("There is a point of "+ currentPoint);
-                    g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
-                            (int) currentPoint.getX(), (int) currentPoint.getY());
-
+                    points.add(currentPoint);
+                    for(int count =0; count < points.size() -2; count++) {
+                        Point p1 = points.get(count);
+                        Point p2 = points.get(count +1);
+                        g2d.drawLine((int) p1.x, (int) p1.y,
+                                (int) p2.x, (int) p2.y);
+                    }
                     //g2d.drawLine();
 //                    Rectangle r = WhiteboardUtils.constructRectObject(pressedPoint, currentPoint);
 //                    g2d.drawOval((int) r.getX(), (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
