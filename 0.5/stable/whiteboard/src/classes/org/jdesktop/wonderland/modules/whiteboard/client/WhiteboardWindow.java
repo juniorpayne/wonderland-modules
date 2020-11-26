@@ -726,8 +726,8 @@ public class WhiteboardWindow extends Window2D {
                 }else if (currentTool == WhiteboardTool.PENCIL) {
                     LOGGER.fine("drawing line: " + pressedPoint.getX() + ", " + pressedPoint.getY()
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
-                    LOGGER.info("There is a point of "+ currentPoint);
-                    g2d.drawLine((int) currentPoint.getX(), (int) currentPoint.getY(),
+                    LOGGER.warning("There is a point of "+ currentPoint);
+                    g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
                             (int) currentPoint.getX(), (int) currentPoint.getY());
 
                     //g2d.drawLine();
