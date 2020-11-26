@@ -728,6 +728,7 @@ public class WhiteboardWindow extends Window2D {
                     LOGGER.fine("drawing line: " + pressedPoint.getX() + ", " + pressedPoint.getY()
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     LOGGER.warning("There is a point of "+ currentPoint);
+                    LOGGER.warning("The size of the array is " + points.size());
                     points.add(currentPoint);
                     for(int count =0; count < points.size() -2; count++) {
                         Point p1 = points.get(count);
