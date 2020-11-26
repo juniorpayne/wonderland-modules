@@ -152,7 +152,7 @@ public class WhiteboardDocument implements SVGDocumentLoaderListener {
         //Create the pencil elements
         String d;
         Element pencil = svgDocument.createElementNS(WhiteboardUtils.svgNS, "path");
-        d = "M" + points.get(0).x + " " points.get(0).y;
+        d = "M" + points.get(0).x + " " + points.get(0).y +" ";
         for(int count =1; count < points.size() -1; count++) {
             Point p1 = points.get(count);
             d = d+ "L"+p1.x +" " + p1.y +" ";
