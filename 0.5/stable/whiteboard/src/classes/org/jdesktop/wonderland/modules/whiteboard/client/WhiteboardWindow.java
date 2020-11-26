@@ -660,6 +660,7 @@ public class WhiteboardWindow extends Window2D {
     protected class MovingOverlay implements Overlay {
 
         public void paint(Graphics g) {
+            LOGGER.warning("in Moving overlay paint");
             Point currentPoint = svgMouseListener.getCurrentPoint();
             Point pressedPoint = svgMouseListener.getPressedPoint();
             if (currentPoint != null && selections != null) {
