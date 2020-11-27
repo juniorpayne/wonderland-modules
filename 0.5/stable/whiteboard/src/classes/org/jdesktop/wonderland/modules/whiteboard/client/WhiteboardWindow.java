@@ -751,14 +751,14 @@ public class WhiteboardWindow extends Window2D {
                     LOGGER.warning("There is a point of "+ currentPoint);
                     LOGGER.warning("The size of the array is " + points.size());
 
-                    for(int count =0; count < points.size() -2; count++) {
+                    for(int count =0; count < points.size() -2; count = count+4) {
                         Point p1 = points.get(count);
                         Point p2 = points.get(count +1);
                         g2d.drawLine((int) p1.x, (int) p1.y,
                                 (int) p2.x, (int) p2.y);
                     }
                     points.add(currentPoint);
-                   
+
                 }
                 else {
                     Rectangle r = WhiteboardUtils.constructRectObject(pressedPoint, currentPoint);
