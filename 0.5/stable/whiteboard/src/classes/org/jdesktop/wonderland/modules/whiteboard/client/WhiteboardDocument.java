@@ -158,7 +158,11 @@ public class WhiteboardDocument implements SVGDocumentLoaderListener {
             d = d+ "L"+p1.x +" " + p1.y +" ";
         }
         LOGGER.warning("whiteboard: created path: " + d);
-//        pencil.setAttributeNS(null, "d", Integer.valueOf(start.x).toString());
+
+        pencil.setAttributeNS(null, "d", d);
+        String idString = whiteboardWindow.getCellUID(whiteboardWindow.getApp()) + System.currentTimeMillis();
+        pencil.setAttributeNS(null, "id", idString);
+        LOGGER.fine("whiteboard: created line: " + pencil);
 //
 //        Element line = svgDocument.createElementNS(WhiteboardUtils.svgNS, "pencil");
 //        line.setAttributeNS(null, "x1", Integer.valueOf(start.x).toString());
