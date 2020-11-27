@@ -164,7 +164,7 @@ public class WhiteboardDocument implements SVGDocumentLoaderListener {
         pencil.setAttributeNS(null, "stroke-width", Float.toString(strokeWeight));
         String idString = whiteboardWindow.getCellUID(whiteboardWindow.getApp()) + System.currentTimeMillis();
         pencil.setAttributeNS(null, "id", idString);
-        LOGGER.warning("whiteboard: created pencil: " + pencil.getAttribute("d"));
+        LOGGER.warning("whiteboard: created pencil: " + pencil.toString());
 //
 //        Element line = svgDocument.createElementNS(WhiteboardUtils.svgNS, "pencil");
 //        line.setAttributeNS(null, "x1", Integer.valueOf(start.x).toString());
