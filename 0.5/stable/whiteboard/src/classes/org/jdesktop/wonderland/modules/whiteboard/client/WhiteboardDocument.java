@@ -162,6 +162,7 @@ public class WhiteboardDocument implements SVGDocumentLoaderListener {
         pencil.setAttributeNS(null, "d", d);
         pencil.setAttributeNS(null, "stroke", whiteboardWindow.getToolManager().getGlobalColor());
         pencil.setAttributeNS(null, "stroke-width", Float.toString(strokeWeight));
+        pencil.setAttributeNS(null, "fill", "none");
         String idString = whiteboardWindow.getCellUID(whiteboardWindow.getApp()) + System.currentTimeMillis();
         pencil.setAttributeNS(null, "id", idString);
         LOGGER.warning("whiteboard: created pencil: " + pencil.toString());
