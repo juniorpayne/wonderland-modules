@@ -750,13 +750,13 @@ public class WhiteboardWindow extends Window2D {
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     LOGGER.warning("There is a point of "+ currentPoint);
                     LOGGER.warning("The size of the array is " + points.size());
-                    points.add(pressedPoint);
-                    for(int count =0; count < points.size() -2; count++) {
-                        Point p1 = points.get(count);
-                        Point p2 = points.get(count +1);
-                        g2d.drawLine((int) p1.x, (int) p1.y,
-                                (int) p2.x, (int) p2.y);
-                    }
+                    points.add(currentPoint);
+//                    for(int count =0; count < points.size() -2; count++) {
+//                        Point p1 = points.get(count);
+//                        Point p2 = points.get(count +1);
+//                        g2d.drawLine((int) p1.x, (int) p1.y,
+//                                (int) p2.x, (int) p2.y);
+//                    }
                     //g2d.drawLine();
 //                    Rectangle r = WhiteboardUtils.constructRectObject(pressedPoint, currentPoint);
 //                    g2d.drawOval((int) r.getX(), (int) r.getY(), (int) r.getWidth(), (int) r.getHeight());
