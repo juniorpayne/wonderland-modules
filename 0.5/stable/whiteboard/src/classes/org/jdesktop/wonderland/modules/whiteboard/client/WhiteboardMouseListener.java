@@ -97,9 +97,10 @@ public class WhiteboardMouseListener implements MouseListener,
             if (currentTool == WhiteboardTool.SELECTOR) {
                 throw new RuntimeException("whiteboard: wrong tool selected");
             }
-            Element newElement = whiteboardDocument.createElement(currentTool, pressedPoint, releasedPoint);
+            Element newElement = whiteboardDocument.createElement(currentTool, pressedPoint, releasedPoint, whiteboardWindow.getPoints() );
             if (newElement != null) {
                 whiteboardWindow.addNewElement(newElement, true);
+                whiteboardWindow.removePoints();
             }
         }
         if (moving) {

@@ -116,6 +116,7 @@ public class WhiteboardWindow extends Window2D {
     private WhiteboardControlPanel controls;
     protected final Object actionLock = new Object();
     // drawing variables
+    private ArrayList<Point> points = new ArrayList<Point>();
     private float strokeWeight = 3;
     private Overlay drawingOverlay = new DrawingOverlay();
     private Overlay selectionOverlay = new SelectionOverlay();
@@ -228,6 +229,25 @@ public class WhiteboardWindow extends Window2D {
         svgCanvas.dispose();
 
         setDocument(null, false);       // Attempt to clean up document, not sure this is sufficient
+    }
+
+    /**
+     *
+     *
+     *
+     *
+     */
+    public ArrayList<Point> getPoints(){
+        return points;
+    }
+    /**
+     *
+     *
+     *
+     *
+     */
+    public void removePoints(){
+        points.clear();
     }
 
     /**
@@ -659,6 +679,7 @@ public class WhiteboardWindow extends Window2D {
     protected class MovingOverlay implements Overlay {
 
         public void paint(Graphics g) {
+
             Point currentPoint = svgMouseListener.getCurrentPoint();
             Point pressedPoint = svgMouseListener.getPressedPoint();
             if (currentPoint != null && selections != null) {
@@ -705,8 +726,11 @@ public class WhiteboardWindow extends Window2D {
     protected class DrawingOverlay implements Overlay {
 
         public void paint(Graphics g) {
+            LOGGER.warning("in Drawing overlay paint");
             Point currentPoint = svgMouseListener.getCurrentPoint();
             Point pressedPoint = svgMouseListener.getPressedPoint();
+
+
             if (currentPoint != null) {
                 Graphics2D g2d = (Graphics2D) g;
 
@@ -719,7 +743,24 @@ public class WhiteboardWindow extends Window2D {
                             + " to " + currentPoint.getX() + ", " + currentPoint.getY());
                     g2d.drawLine((int) pressedPoint.getX(), (int) pressedPoint.getY(),
                             (int) currentPoint.getX(), (int) currentPoint.getY());
-                } else {
+
+
+                }else if (currentTool == WhiteboardTool.PENCIL) {
+                    LOGGER.fine("drawing line: " + pressedPoint.getX() + ", " + pressedPoint.getY()
+                            + " to " + currentPoint.getX() + ", " + currentPoint.getY());
+                    LOGGER.warning("There is a point of "+ currentPoint);
+                    LOGGER.warning("The size of the array is " + points.size());
+
+                    for(int count =0; count < points.size() -2; count++) {
+                        Point p1 = points.get(count);
+                        Point p2 = points.get(count +1);
+                        g2d.drawLine((int) p1.x, (int) p1.y,
+                                (int) p2.x, (int) p2.y);
+                    }
+                    points.add(currentPoint);
+
+                }
+                else {
                     Rectangle r = WhiteboardUtils.constructRectObject(pressedPoint, currentPoint);
                     if (currentTool == WhiteboardTool.RECT || currentTool == WhiteboardTool.RECT_FILL) {
                         LOGGER.fine("drawing rectangle: " + r);

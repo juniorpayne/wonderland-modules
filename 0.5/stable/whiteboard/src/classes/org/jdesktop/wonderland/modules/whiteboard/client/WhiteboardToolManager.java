@@ -60,7 +60,7 @@ public class WhiteboardToolManager implements WhiteboardCellMenuListener {
 
     public enum WhiteboardTool {
 
-        NEW, SELECTOR, LINE, RECT, RECT_FILL, ELLIPSE, ELLIPSE_FILL, BACKGROUND_IMAGE, CHANGE_FONT, IMAGE, NEW_TEXT, COLOR_CHOOSER
+        NEW, SELECTOR, PENCIL, LINE, RECT, RECT_FILL, ELLIPSE, ELLIPSE_FILL, BACKGROUND_IMAGE, CHANGE_FONT, IMAGE, NEW_TEXT, COLOR_CHOOSER
     }
 
     public enum WhiteboardColor {
@@ -142,6 +142,10 @@ public class WhiteboardToolManager implements WhiteboardCellMenuListener {
 
     public void selector() {
         setTool(WhiteboardTool.SELECTOR);
+    }
+
+    public void pencil() {
+        setTool(WhiteboardTool.PENCIL);
     }
 
     public void line() {

@@ -108,7 +108,8 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
         toolTipTextMap.put(selectButton, " selector ");
         toolTipTextMap.put(textButton, " add text ");
         toolTipTextMap.put(fontButton, " change font ");
-        toolTipTextMap.put(lineButton, " line ");
+        toolTipTextMap.put(pencilButton, " pencil ");
+        toolTipTextMap.put(lineButton, " lineboo ");
         toolTipTextMap.put(rectangleButton, " rectangle ");
         toolTipTextMap.put(rectangleFillButton, " filled rectangle ");
         toolTipTextMap.put(ellipseButton, " ellipse ");
@@ -127,6 +128,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
                 selectButton.addMouseListener(hoverListener);
                 textButton.addMouseListener(hoverListener);
                 fontButton.addMouseListener(hoverListener);
+                pencilButton.addMouseListener(hoverListener);
                 lineButton.addMouseListener(hoverListener);
                 rectangleButton.addMouseListener(hoverListener);
                 rectangleFillButton.addMouseListener(hoverListener);
@@ -145,6 +147,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
             selectButton.setToolTipText(toolTipTextMap.get(selectButton));
             textButton.setToolTipText(toolTipTextMap.get(textButton));
             fontButton.setToolTipText(toolTipTextMap.get(fontButton));
+            pencilButton.setToolTipText(toolTipTextMap.get(pencilButton));
             lineButton.setToolTipText(toolTipTextMap.get(lineButton));
             rectangleButton.setToolTipText(toolTipTextMap.get(rectangleButton));
             rectangleFillButton.setToolTipText(toolTipTextMap.get(rectangleFillButton));
@@ -268,6 +271,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
         jPanel1 = new javax.swing.JPanel();
         newButton = new javax.swing.JButton();
         selectButton = new javax.swing.JButton();
+        pencilButton = new javax.swing.JButton();
         lineButton = new javax.swing.JButton();
         rectangleButton = new javax.swing.JButton();
         ellipseButton = new javax.swing.JButton();
@@ -307,6 +311,17 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
         selectButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 selectButtonActionPerformed(evt);
+            }
+        });
+
+        pencilButton.setBackground(new java.awt.Color(231, 230, 230));
+        pencilButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/org/jdesktop/wonderland/modules/whiteboard/client/resources/WhiteboardDrawLine32x32.png"))); // NOI18N
+        pencilButton.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        pencilButton.setBorderPainted(false);
+        pencilButton.setMargin(new java.awt.Insets(0, -4, 0, -4));
+        pencilButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pencilButtonActionPerformed(evt);
             }
         });
 
@@ -500,6 +515,8 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
                 .add(0, 0, 0)
                 .add(fontButton)
                 .add(0, 0, 0)
+                .add(pencilButton)
+                .add(0, 0, 0)
                 .add(lineButton)
                 .add(0, 0, 0)
                 .add(rectangleButton)
@@ -537,6 +554,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
                     .add(moveableImage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(newButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(selectButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                    .add(pencilButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(lineButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(rectangleButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(ellipseButton, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 38, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
@@ -582,6 +600,17 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
             }
         }
 }//GEN-LAST:event_selectButtonActionPerformed
+
+    private void pencilButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pencilButtonActionPerformed
+        if (!isButtonDepressed(pencilButton)) {
+            Iterator<WhiteboardCellMenuListener> iter = cellMenuListeners.iterator();
+            while (iter.hasNext()) {
+                WhiteboardCellMenuListener listener = iter.next();
+                listener.pencil();
+            }
+        }
+    }//GEN-LAST:event_pencilButtonActionPerformed
+
 
     private void lineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lineButtonActionPerformed
         if (!isButtonDepressed(lineButton)) {
@@ -719,6 +748,7 @@ public class WhiteboardControlPanel extends javax.swing.JPanel implements CellMe
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JButton pencilButton;
     private javax.swing.JButton lineButton;
     private javax.swing.JButton moveableImage;
     private javax.swing.JButton newButton;

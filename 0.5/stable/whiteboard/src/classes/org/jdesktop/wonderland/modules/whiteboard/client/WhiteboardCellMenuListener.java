@@ -35,6 +35,8 @@ public interface WhiteboardCellMenuListener {
 
     public void selector();
 
+    public void pencil();
+
     public void line();
 
     public void rect(boolean filled);
